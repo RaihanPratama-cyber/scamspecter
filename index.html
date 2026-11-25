@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScamSpecter — Ghost Hunter for Scam Links</title>
+<meta name="description" content="Paste a suspicious link or message and ScamSpecter checks it locally, in your browser, and explains the risk with evidence. Nothing leaves your device.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="ghost" aria-hidden="true">👻</span>
+    <div>
+      <h1>ScamSpecter</h1>
+      <p class="tagline">Ghost hunter for scam links — check before you click.</p>
+    </div>
+  </div>
+  <span class="badge">100% local &middot; nothing leaves your device</span>
+</header>
+
+<main>
+  <section class="card intro">
+    <p>Got a suspicious link or message on WhatsApp, SMS or email? Paste it below.
+    ScamSpecter scores it in your browser and shows <strong>exactly why</strong> it is
+    risky — or why it looks clean. This is a heuristic check, not a guarantee:
+    when in doubt, verify through the official app or phone number.</p>
+  </section>
+
+  <section class="card">
+    <label for="input"><strong>Link or message to check</strong></label>
+    <textarea id="input" rows="5" placeholder="Paste a link or a full message here, e.g. &#10;Selamat! Anda menang undian Rp10.000.000, klaim hadiah di https://bit.ly/abc123"></textarea>
+    <div class="actions">
+      <button id="checkBtn" type="button">👻 Hunt the ghost</button>
+      <button id="clearBtn" type="button" class="secondary">Clear</button>
+    </div>
+
+    <div class="ocr">
+      <label for="imageInput" class="secondary-btn">📷 Check a screenshot instead</label>
+      <input type="file" id="imageInput" accept="image/*" hidden>
+      <span id="ocrStatus" class="muted">Screenshot text is read on your device with Tesseract.js (loaded from a CDN on first use — needs internet once; the check itself stays local).</span>
+    </div>
+
+    <div class="samples">
+      <span class="muted">Try a sample:</span>
+      <div id="sampleButtons"></div>
+    </div>
+  </section>
+
+  <section id="result" class="card hidden" aria-live="polite">
+    <div class="verdict-row">
+      <span id="verdictBadge" class="verdict">—</span>
+      <div class="score-wrap">
+        <div class="score-bar"><div id="scoreFill"></div></div>
+        <span id="scoreText" class="muted"></span>
+      </div>
+    </div>
+    <h2>Evidence</h2>
+    <ul id="evidenceList"></ul>
+    <h2>What to do</h2>
+    <p id="advice"></p>
+    <p class="muted small">ScamSpecter is a transparent rule-based check. It cannot see
+    the real website behind a link and it cannot guarantee safety. A "Low risk"
+    result means no strong scam signals were found — stay alert anyway.</p>
+  </section>
+
+  <section class="card how">
+    <h2>How it works</h2>
+    <ol>
+      <li><strong>URL rules</strong> — shorteners, raw IP addresses, typosquats of Indonesian brands (BCA, BRI, DANA, Shopee, …), suspicious domain endings, .apk downloads, missing HTTPS.</li>
+      <li><strong>Message patterns</strong> — Indonesian scam language: prize lures, OTP/PIN requests, urgency and threats, "admin fee" demands.</li>
+      <li><strong>Screenshot OCR</strong> — text is read from your screenshot on your device, then checked with the same rules.</li>
+      <li><strong>Offline-first</strong> — all scoring runs locally in your browser. No account, no upload, no tracking.</li>
+    </ol>
+  </section>
+</main>
+
+<footer>
+  <p>ScamSpecter — built for Kiroween 2026 (Frankenstein) by Raihan Pratama, Politeknik Caltex Riau. Open source (MIT). Scoring is heuristic; verify important decisions through official channels.</p>
+</footer>
+
+<script src="scoring.js"></script>
+<script src="app.js"></script>
+<script>
+  // Service worker only works over http(s); skip silently on file://
+  if ('serviceWorker' in navigator && (location.protocol === 'http:' || location.protocol === 'https:')) {
+    navigator.serviceWorker.register('sw.js').catch(function () { /* offline cache is optional */ });
+  }
+</script>
+</body>
+</html>

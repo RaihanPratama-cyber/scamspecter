@@ -1,0 +1,6 @@
+# ScamSpecter .gitignore
+# NOTE: the Kiro config directory at the repo root is deliberately NOT
+# ignored here — Kiroween requires it to be present in the repo.
+node_modules/
+.DS_Store
+*.log
